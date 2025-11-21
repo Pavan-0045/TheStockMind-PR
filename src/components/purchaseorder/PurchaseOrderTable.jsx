@@ -1,0 +1,91 @@
+import React from "react";
+import { purchaseOrders } from "../../page/PurchaseOrdersData.js";
+import { Status } from "../common/Status.jsx";
+import { actions as actionIcons } from "../common/Action.js";
+
+function PurchaseOrderTable() {
+  return (
+    <div className="overflow-x-auto">
+      <table className="min-w-full border-2 border-gray-300 mt-6 text-sm">
+        <thead className="bg-gray-100 text-gray-700">
+          <tr className="border-2 border-gray-300">
+            <th className="px-3 py-3 text-left">Ordered Date</th>
+            <th className="px-3 py-3 text-left">Purchase Order ID</th>
+            <th className="px-3 py-3 text-left">Supplier ID</th>
+            <th className="px-3 py-3 text-left">ETA</th>
+            <th className="px-3 py-3 text-left">Status</th>
+            <th className="px-3 py-3 text-left">Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {purchaseOrders.map((order) => (
+            <tr key={order.id} className="hover:bg-gray-50 transition">
+              {/* Ordered Date */}
+              <td className="border-b-2 border-gray-300 px-3 py-2 whitespace-nowrap">
+                <div className="flex flex-col items-start">
+                  <span>{order.orderedDate}</span>
+                  <span className="text-sm">{order.orderTime}</span>
+                </div>
+              </td>
+
+              {/* Purchase Order ID */}
+              <td className="border-b-2 border-gray-300 px-3 py-2 whitespace-nowrap">
+                {order.purchaseOrderId}
+              </td>
+
+              {/* Supplier ID */}
+              <td className="border-b-2 border-gray-300 px-3 py-2 whitespace-nowrap font-semibold underline cursor-pointer text-gray-700">
+                {order.supplierId}
+              </td>
+
+              {/* ETA */}
+              <td className="border-b-2 border-gray-300 px-3 py-2 whitespace-nowrap">
+                {order.eta}
+              </td>
+
+              {/* Status */}
+              <td className="border-b-2 border-gray-300 px-3 py-2 whitespace-nowrap items-start">
+                <Status color={order.status.color} label={order.status.label} />
+              </td>
+
+              {/* Actions */}
+              <td className="border-b-2 border-gray-300 px-3 py-5 flex items-start space-x-2 relative">
+                {order.actions.map((action) => {
+                  const act = actionIcons[action];
+                  if (!act) return null;
+
+                  const Icon = act.icon;
+
+                  return (
+                    <div
+                      key={action}
+                      className="relative group flex items-center justify-center"
+                    >
+                      <button
+                        className={`${act.color} transition flex items-center justify-center`}
+                      >
+                        <Icon size={18} />
+                      </button>
+
+                      {act.message && (
+                        <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-1 hidden group-hover:flex flex-col items-start bg-white border rounded shadow px-2 py-1 z-50 max-w-xs">
+                          <span className="text-red-600 font-semibold">
+                            Remark:
+                          </span>
+                          <span className="text-black">{act.message}</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export default PurchaseOrderTable;
